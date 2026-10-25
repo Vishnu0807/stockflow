@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<a class="back" href="{{ back }}">← Inventory</a><h1>{{ title }}</h1><p class="muted">{{ subtitle }}</p><form method="post" class="panel form-panel">{% csrf_token %}{{ form.as_p }}<div class="actions"><button>Save changes</button><a href="{{ back }}">Cancel</a></div></form>{% endblock %}

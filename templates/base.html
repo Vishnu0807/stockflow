@@ -1,0 +1,10 @@
+{% load static %}<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}StockFlow{% endblock %}</title><link rel="stylesheet" href="{% static 'style.css' %}"></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header><div class="nav-wrap"><a class="brand" href="/">stockflow<span>.</span></a>
+<nav aria-label="Main navigation"><a href="/" {% if request.resolver_match.url_name == 'inventory' %}aria-current="page"{% endif %}>Inventory</a><a href="/orders/" {% if 'order' in request.resolver_match.url_name %}aria-current="page"{% endif %}>Orders</a><a href="/reports/" {% if request.resolver_match.url_name == 'reports' %}aria-current="page"{% endif %}>Reports</a></nav>
+<div class="account">{% if user.is_authenticated %}<span>{{ user.username }}</span><form method="post" action="/logout/">{% csrf_token %}<button class="text-button">Sign out</button></form>{% else %}<span class="read-only">Read-only demo</span><a href="/login/">Sign in</a>{% endif %}</div></div></header>
+<main id="main">{% for message in messages %}<div class="notice {{ message.tags }}" role="status">{{ message }}</div>{% endfor %}{% block content %}{% endblock %}</main>
+<footer><span>StockFlow · Inventory & orders</span><a href="https://github.com/vishnu0807/stockflow" target="_blank" rel="noopener">Source on GitHub ↗</a></footer>
+</body></html>

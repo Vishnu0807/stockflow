@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: stockflow
+      POSTGRES_USER: stockflow
+      POSTGRES_PASSWORD: localpassword
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stockflow -d stockflow"]
+      interval: 2s
+      retries: 15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  web:
+    build: .
+    environment:
+      DATABASE_URL: postgres://stockflow:localpassword@db:5432/stockflow
+      SECRET_KEY: local-docker-key-change-before-deployment
+      DEBUG: "1"
+      ALLOWED_HOSTS: localhost,127.0.0.1
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  postgres_data:
