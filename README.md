@@ -104,34 +104,3 @@ shop/views.py    Three-page UI and operator forms
 templates/       Server-rendered HTML
 static/          One CSS file; no frontend build process
 ```
-
-## Push to GitHub
-
-Create an empty repository named `stockflow` under your account `vishnu0807` on <https://github.com/new>. In the folder containing `manage.py`, run:
-
-```powershell
-git init
-git add .
-git commit -m "Build transactional inventory and order app"
-git branch -M main
-git remote add origin https://github.com/vishnu0807/stockflow.git
-git push -u origin main
-```
-
-For later updates: `git add .`, `git commit -m "Explain a change"`, then `git push`. The `.gitignore` excludes the local database, virtual environment, and secrets. Do not commit an operator password or production database URL.
-
-## Optional live demo
-
-The included Dockerfile can run as a Render web service. Create a PostgreSQL database first, then create a web service from your GitHub repository with **Docker** as its runtime. In its environment settings set `DATABASE_URL` to the database's internal URL, `DEBUG=0`, a long random `SECRET_KEY`, and `CSRF_TRUSTED_ORIGINS=https://YOUR-APP.onrender.com`. Render supplies its host name to this app automatically. The container starts migrations, adds sample products if missing, and binds the provided `PORT`. To add an operator you will need shell access or another secure account-provisioning workflow; the public read-only demo works without an operator. Do not expose a seeded operator password.
-
-Check your hosting plan before using the link on a resume. As of October 2026, Render's **free PostgreSQL databases expire after 30 days**. A lasting demo needs a persistent database plan and a check that the URL still works. This application is a Django server, not a static page or a Vercel serverless frontend.
-
-## Interview notes
-
-- **Why reserved stock?** It prevents an order from claiming physical units before fulfilment. Available inventory is the difference.
-- **Why PostgreSQL?** A row lock makes the availability check and reservation safe when two orders arrive together. SQLite is offered for convenient local exploration, not as evidence for that guarantee.
-- **Why the request key?** A browser or client can retry after a timeout without creating a second order. A different payload with the same key is rejected.
-- **Why store `unit_price` on an order item?** Historic order totals should not change if product prices change later.
-- **What are the limits?** No payment gateway, partial fulfilment, partial returns, tax, warehouse locations, or multi-tenant isolation. Operators share one inventory.
-
-Resume wording after you have run and understood it: **Built a Django/PostgreSQL order system with transactional stock reservations, idempotent requests, inventory audit events, REST endpoints, and SQL reports.**
